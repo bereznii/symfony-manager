@@ -27,3 +27,6 @@ manager-test:
 
 console:
 	docker-compose run --rm php-cli php bin/console $(c)
+
+require:
+	docker-compose run --rm php-cli composer require $(p)
