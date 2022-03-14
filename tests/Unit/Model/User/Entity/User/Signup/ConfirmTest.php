@@ -9,6 +9,9 @@ use PHPUnit\Framework\TestCase;
 
 class ConfirmTest extends TestCase
 {
+    /**
+     * @return void
+     */
     public function testSuccess(): void
     {
         $user = (new UserBuilder())->viaEmail()->build();
@@ -21,12 +24,15 @@ class ConfirmTest extends TestCase
         self::assertNull($user->getConfirmToken());
     }
 
+    /**
+     * @return void
+     */
     public function testAlready(): void
     {
         $user = (new UserBuilder())->viaEmail()->build();
 
         $user->confirmSignUp();
-        $this->expectExceptionMessage('User is already confirmed.');
+        self::expectExceptionMessage('User is already confirmed.');
         $user->confirmSignUp();
     }
 }

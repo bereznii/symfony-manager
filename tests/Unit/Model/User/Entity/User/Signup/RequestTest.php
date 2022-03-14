@@ -11,6 +11,9 @@ use PHPUnit\Framework\TestCase;
 
 class RequestTest extends TestCase
 {
+    /**
+     * @return void
+     */
     public function testSuccess(): void
     {
         $user = User::signUpByEmail(

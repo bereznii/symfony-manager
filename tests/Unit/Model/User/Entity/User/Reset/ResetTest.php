@@ -42,7 +42,7 @@ class ResetTest extends TestCase
 
         $user->requestPasswordReset($token, $now);
 
-        $this->expectExceptionMessage('Reset token is expired.');
+        self::expectExceptionMessage('Reset token is expired.');
         $user->passwordReset($now->modify('+1 day'), 'hash');
     }
 
