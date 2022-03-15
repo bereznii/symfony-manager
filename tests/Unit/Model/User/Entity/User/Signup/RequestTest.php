@@ -28,7 +28,7 @@ class RequestTest extends TestCase
         self::assertFalse($user->isActive());
 
         self::assertEquals($id, $user->getId());
-        self::assertEquals($date, $user->getDate());
+        self::assertEquals($date, $user->getCreatedAt());
         self::assertEquals($email, $user->getEmail());
         self::assertEquals($hash, $user->getPasswordHash());
         self::assertEquals($token, $user->getConfirmToken());

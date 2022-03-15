@@ -36,4 +36,12 @@ class Id
     {
         return $this->value;
     }
+
+    /**
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return $this->getValue();
+    }
 }

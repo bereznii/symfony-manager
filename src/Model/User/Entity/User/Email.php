@@ -8,9 +8,7 @@ use Webmozart\Assert\Assert;
 
 class Email
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     private string $value;
 
     /**

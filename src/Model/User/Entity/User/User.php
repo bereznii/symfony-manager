@@ -6,69 +6,79 @@ namespace App\Model\User\Entity\User;
 
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 use DomainException;
 
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
+#[ORM\Table(name: 'user_users')]
+#[ORM\UniqueConstraint(columns: ["email"])]
+#[ORM\UniqueConstraint(columns: ["reset_token_token"])]
 class User
 {
     private const STATUS_NEW = 'new';
     private const STATUS_WAIT = 'wait';
     private const STATUS_ACTIVE = 'active';
 
-    /**
-     * @var Id
-     */
-    private $id;
-    /**
-     * @var DateTimeImmutable
-     */
-    private DateTimeImmutable $date;
-    /**
-     * @var Email|null
-     */
+    /** @var Id */
+    #[ORM\Column(type: 'user_user_id',)]
+    #[ORM\Id]
+    private Id $id;
+
+    /** @var DateTimeImmutable */
+    #[ORM\Column(type: 'datetime_immutable',)]
+    private DateTimeImmutable $created_at;
+
+    /** @var Email|null */
+    #[ORM\Column(type: 'user_user_email', nullable: true,)]
     private $email;
-    /**
-     * @var string|null
-     */
+
+    /** @var string|null */
+    #[ORM\Column(name: 'password_hash', type: 'string', nullable: true,)]
     private ?string $passwordHash;
-    /**
-     * @var string|null
-     */
+
+    /** @var string|null */
+    #[ORM\Column(name: 'confirm_token', type: 'string', nullable: true,)]
     private ?string $confirmToken;
-    /**
-     * @var ResetToken|null
-     */
+
+    /** @var ResetToken|null */
+    #[ORM\Embedded(class: ResetToken::class, columnPrefix: 'reset_token_',)]
     private $resetToken;
-    /**
-     * @var string|null
-     */
+
+    /** @var string|null */
+    #[ORM\Column(type: 'string', length: 16,)]
     private ?string $status;
-    /**
-     * @var ArrayCollection|Network[]
-     */
+
+    /** @var Role */
+    #[ORM\Column(type: 'user_user_role', length: 16,)]
+    private Role $role;
+
+    /** @var ArrayCollection|array */
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: 'Network', cascade: ['persist'], orphanRemoval: true)]
     private ArrayCollection|array $networks;
 
     /**
      * @param Id $id
-     * @param DateTimeImmutable $date
+     * @param DateTimeImmutable $created_at
      */
-    private function __construct(Id $id, \DateTimeImmutable $date)
+    private function __construct(Id $id, \DateTimeImmutable $created_at)
     {
         $this->id = $id;
-        $this->date = $date;
+        $this->created_at = $created_at;
         $this->networks = new ArrayCollection();
     }
 
     /**
      * @param Id $id
-     * @param DateTimeImmutable $date
+     * @param DateTimeImmutable $created_at
      * @param Email $email
      * @param string $hash
      * @param string $confirmToken
      * @return static
      */
-    public static function signupByEmail(Id $id, DateTimeImmutable $date, Email $email, string $hash, string $confirmToken): self
+    public static function signupByEmail(Id $id, DateTimeImmutable $created_at, Email $email, string $hash, string $confirmToken): self
     {
-        $user = new self($id, $date);
+        $user = new self($id, $created_at);
         $user->email = $email;
         $user->passwordHash = $hash;
         $user->confirmToken = $confirmToken;
@@ -78,14 +88,14 @@ class User
 
     /**
      * @param Id $id
-     * @param DateTimeImmutable $date
+     * @param DateTimeImmutable $created_at
      * @param string $network
      * @param string $identity
      * @return static
      */
-    public static function signUpByNetwork(Id $id, \DateTimeImmutable $date, string $network, string $identity): self
+    public static function signUpByNetwork(Id $id, \DateTimeImmutable $created_at, string $network, string $identity): self
     {
-        $user = new self($id, $date);
+        $user = new self($id, $created_at);
         $user->attachNetwork($network, $identity);
         $user->status = self::STATUS_ACTIVE;
         return $user;
@@ -190,9 +200,9 @@ class User
     /**
      * @return DateTimeImmutable
      */
-    public function getDate(): \DateTimeImmutable
+    public function getCreatedAt(): \DateTimeImmutable
     {
-        return $this->date;
+        return $this->created_at;
     }
 
     /**
@@ -233,5 +243,16 @@ class User
     public function getNetworks(): array
     {
         return $this->networks->toArray();
+    }
+
+    /**
+     * @return void
+     */
+    #[ORM\PostLoad]
+    public function checkEmbeds(): void
+    {
+        if ($this->resetToken->isEmpty()) {
+            $this->resetToken = null;
+        }
     }
 }
