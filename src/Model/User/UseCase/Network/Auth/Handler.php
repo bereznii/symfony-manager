@@ -8,6 +8,8 @@ use App\Model\Flusher;
 use App\Model\User\Entity\User\Id;
 use App\Model\User\Entity\User\User;
 use App\Model\User\Entity\User\UserRepository;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 
 class Handler
 {
@@ -23,6 +25,8 @@ class Handler
     /**
      * @param Command $command
      * @return void
+     * @throws NoResultException
+     * @throws NonUniqueResultException
      */
     public function handle(Command $command): void
     {
@@ -38,7 +42,6 @@ class Handler
         );
 
         $this->users->add($user);
-
         $this->flusher->flush();
     }
 }

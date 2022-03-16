@@ -2,32 +2,30 @@
 
 declare(strict_types=1);
 
-namespace App\Model\User\UseCase\Signup\Request;
+namespace App\Model\User\UseCase\SignUp\Request;
 
 use App\Model\Flusher;
 use App\Model\User\Entity\User\Email;
 use App\Model\User\Entity\User\Id;
 use App\Model\User\Entity\User\User;
 use App\Model\User\Entity\User\UserRepository;
-use App\Model\User\Service\ConfirmTokenizer;
 use App\Model\User\Service\ConfirmTokenSender;
 use App\Model\User\Service\PasswordHasher;
-use Doctrine\ORM\EntityManagerInterface;
-use Ramsey\Uuid\Uuid;
+use App\Model\User\Service\SignUpConfirmTokenizer;
 
 class Handler
 {
     /**
      * @param UserRepository $users
      * @param PasswordHasher $hasher
-     * @param ConfirmTokenizer $tokenizer
+     * @param SignUpConfirmTokenizer $tokenizer
      * @param ConfirmTokenSender $sender
      * @param Flusher $flusher
      */
     public function __construct(
         private UserRepository $users,
         private PasswordHasher $hasher,
-        private ConfirmTokenizer $tokenizer,
+        private SignUpConfirmTokenizer $tokenizer,
         private ConfirmTokenSender $sender,
         private Flusher $flusher
     ) {}
@@ -40,12 +38,12 @@ class Handler
             throw new \DomainException('User already exists.');
         }
 
-        $user = new User(
-            id: Id::next(),
-            created_at: new \DateTimeImmutable(),
-            email: $email,
-            passwordHash: $this->hasher->hash($command->password),
-            token: $token = $this->tokenizer->generate(),
+        $user = User::signUpByEmail(
+            Id::next(),
+            new \DateTimeImmutable(),
+            $email,
+            $this->hasher->hash($command->password),
+            $token = $this->tokenizer->generate()
         );
 
         $this->users->add($user);

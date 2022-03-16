@@ -6,7 +6,7 @@ namespace App\Model\User\Service;
 
 use Ramsey\Uuid\Uuid;
 
-class SignupConfirmTokenizer
+class SignUpConfirmTokenizer
 {
     /**
      * @return string

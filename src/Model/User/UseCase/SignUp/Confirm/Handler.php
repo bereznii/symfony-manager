@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Model\User\UseCase\Signup\Confirm;
+namespace App\Model\User\UseCase\SignUp\Confirm;
 
 use App\Model\Flusher;
 use App\Model\User\Entity\User\UserRepository;
@@ -28,7 +28,7 @@ class Handler
             throw new \DomainException('Incorrect or confirmed token.');
         }
 
-        $user->confirmSignup();
+        $user->confirmSignUp();
         $this->flusher->flush();
     }
 }

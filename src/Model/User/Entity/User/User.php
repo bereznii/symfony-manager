@@ -7,6 +7,7 @@ namespace App\Model\User\Entity\User;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\PersistentCollection;
 use DomainException;
 
 #[ORM\Entity]
@@ -18,7 +19,7 @@ class User
 {
     private const STATUS_NEW = 'new';
     private const STATUS_WAIT = 'wait';
-    private const STATUS_ACTIVE = 'active';
+    public const STATUS_ACTIVE = 'active';
 
     /** @var Id */
     #[ORM\Column(type: 'user_user_id',)]
@@ -53,9 +54,9 @@ class User
     #[ORM\Column(type: 'user_user_role', length: 16,)]
     private Role $role;
 
-    /** @var ArrayCollection|array */
+    /** @var PersistentCollection */
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: 'Network', cascade: ['persist'], orphanRemoval: true)]
-    private ArrayCollection|array $networks;
+    private $networks;
 
     /**
      * @param Id $id
@@ -65,6 +66,7 @@ class User
     {
         $this->id = $id;
         $this->created_at = $created_at;
+        $this->role = Role::user();
         $this->networks = new ArrayCollection();
     }
 
@@ -76,7 +78,7 @@ class User
      * @param string $confirmToken
      * @return static
      */
-    public static function signupByEmail(Id $id, DateTimeImmutable $created_at, Email $email, string $hash, string $confirmToken): self
+    public static function signUpByEmail(Id $id, DateTimeImmutable $created_at, Email $email, string $hash, string $confirmToken): self
     {
         $user = new self($id, $created_at);
         $user->email = $email;
@@ -254,5 +256,17 @@ class User
         if ($this->resetToken->isEmpty()) {
             $this->resetToken = null;
         }
+    }
+
+    /**
+     * @param Role $role
+     * @return void
+     */
+    public function changeRole(Role $role): void
+    {
+        if ($this->role->isEqual($role)) {
+            throw new \DomainException('Role is already same.');
+        }
+        $this->role = $role;
     }
 }
