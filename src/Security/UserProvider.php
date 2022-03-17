@@ -8,6 +8,7 @@ use App\ReadModel\User\AuthView;
 use App\ReadModel\User\UserFetcher;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Webmozart\Assert\Assert;
@@ -42,53 +43,53 @@ class UserProvider implements UserProviderInterface
         }
 
         $user = $this->loadUser($identity->getUserIdentifier());
-        return self::identityByUser($user);
+        return self::identityByUser($user, $user['email']);
     }
 
     /**
-     * @param string $username
+     * @param string $identifier
      * @return UserInterface
      * @throws \Doctrine\DBAL\Exception
      */
-    public function loadUserByIdentifier(string $username): UserInterface
+    public function loadUserByIdentifier(string $identifier): UserInterface
     {
-        $user = $this->loadUser($username);
-        return self::identityByUser($user);
+        $user = $this->loadUser($identifier);
+        return self::identityByUser($user, $identifier);
     }
 
     /**
-     * @param $username
+     * @param $identifier
      * @return array
      * @throws \Doctrine\DBAL\Exception
      */
-    private function loadUser($username): array
+    private function loadUser($identifier): array
     {
-        $chunks = explode(':', $username);
+        $chunks = explode(':', $identifier);
 
-        //TODO: load for network
-//        if (count($chunks) === 2 && $user = $this->users->findForAuthByNetwork($chunks[0], $chunks[1])) {
-//            return $user;
-//        }
-
-        if ($user = $this->users->findForAuthByEmail($username)) {
+        if (count($chunks) === 2 && $user = $this->users->findForAuthByNetwork($chunks[0], $chunks[1])) {
             return $user;
         }
 
-        throw new UsernameNotFoundException('');
+        if ($user = $this->users->findForAuthByEmail($identifier)) {
+            return $user;
+        }
+
+        throw new UserNotFoundException('');
     }
 
     /**
      * @param array $user
+     * @param string $identifier
      * @return UserIdentity
      */
-    private static function identityByUser(array $user): UserIdentity
+    private static function identityByUser(array $user, string $identifier): UserIdentity
     {
         return new UserIdentity(
-            $user['id'],
-            $user['email'],
-            $user['status'],
-            $user['password_hash'],
-            $user['role'],
+            id: $user['id'],
+            email: $identifier,
+            status: $user['status'],
+            password: $user['password_hash'],
+            role: $user['role'],
         );
     }
 }

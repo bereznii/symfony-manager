@@ -1,0 +1,6 @@
+security:
+  firewalls:
+    main:
+      form_login: ~
+      http_basic: ~
+      entry_point: form_login

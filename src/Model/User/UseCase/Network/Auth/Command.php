@@ -7,11 +7,11 @@ namespace App\Model\User\UseCase\Network\Auth;
 class Command
 {
     /**
-     * @var string
+     * @param string $network
+     * @param string $identity
      */
-    public string $network;
-    /**
-     * @var string
-     */
-    public string $identity;
+    public function __construct(
+        public string $network,
+        public string $identity
+    ) {}
 }

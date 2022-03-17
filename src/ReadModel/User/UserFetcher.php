@@ -75,4 +75,30 @@ class UserFetcher
 
         return $result ?: null;
     }
+
+    /**
+     * @param string $network
+     * @param string $identity
+     * @return array|null
+     * @throws \Doctrine\DBAL\Exception
+     */
+    public function findForAuthByNetwork(string $network, string $identity): ?array
+    {
+        $result = $this->connection->createQueryBuilder()
+            ->select(
+                'u.id',
+                'CONCAT(n.network, \':\', n.identity) AS email',
+                'u.password_hash',
+                'u.role',
+                'u.status'
+            )
+            ->from('user_users', 'u')
+            ->innerJoin('u', 'user_user_networks', 'n', 'n.user_id = u.id')
+            ->where('n.network = :network AND n.identity = :identity')
+            ->setParameter('network', $network)
+            ->setParameter('identity', $identity)
+            ->executeQuery()->fetchAssociative();
+
+        return $result ?: null;
+    }
 }
