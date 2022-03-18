@@ -8,7 +8,7 @@
             <p class="login-box-msg">Password reset</p>
             {{ form_start(form) }}
 
-            {% include 'partials/_flashes.html.twig' %}
+            {% include 'partial/_flashes.html.twig' %}
             <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
             <div class="input-group mb-3">
                 {{ form_widget(form.email, {'attr': {'placeholder': 'Email', 'class': 'form-control'}}) }}

@@ -52,13 +52,13 @@ class RegisterController extends AbstractController
 
     /**
      * @param string $token
-     * @param SignUp\Confirm\Handler $handler
+     * @param \App\Model\User\UseCase\SignUp\Confirm\Token\Handler $handler
      * @return Response
      */
     #[Route('/signup/{token}', name: 'auth.signup.confirm')]
-    public function confirm(string $token, SignUp\Confirm\Handler $handler): Response
+    public function confirm(string $token, SignUp\Confirm\Token\Handler $handler): Response
     {
-        $command = new SignUp\Confirm\Command($token);
+        $command = new SignUp\Confirm\Token\Command($token);
 
         try {
             $handler->handle($command);

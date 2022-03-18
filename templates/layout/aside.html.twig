@@ -12,7 +12,7 @@
                 <img src="{{ asset('img/user.png') }}" class="img-circle elevation-2" alt="User Image">
             </div>
             <div class="info">
-                <a href="#" class="d-block">Alexander Pierce</a>
+                <a href="{{ path('profile') }}" class="d-block">{{ app.user.email }}</a>
             </div>
         </div>
 

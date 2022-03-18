@@ -48,7 +48,13 @@ services:
       - ./:/app
     working_dir: /app
     command: sh -c "until [ -f .ready ] ; do sleep 1 ; done && npm run watch"
+  redis:
+    image: redis:3.0-alpine
+    volumes:
+      - manager-redis:/data
+    command: redis-server --requirepass secret
 
 volumes:
   manager-postgres:
+  manager-redis:
   manager-composer:

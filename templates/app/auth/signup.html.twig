@@ -8,7 +8,7 @@
             <p class="login-box-msg">Register a new membership</p>
             {{ form_start(form) }}
 
-                {% include 'partials/_flashes.html.twig' %}
+                {% include 'partial/_flashes.html.twig' %}
                 <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
                 <div class="input-group mb-3">
                     {{ form_widget(form.email, {'attr': {'placeholder': 'Email', 'class': 'form-control'}}) }}
@@ -30,7 +30,7 @@
                 </div>
                 <div class="row">
                     <div class="col-12">
-                        <button type="submit" class="btn btn-primary btn-block">Sign Up</button>
+                        <button type="submit" class="btn btn-primary btn-block">Register</button>
                     </div>
                 </div>
 
@@ -38,7 +38,7 @@
             <div class="social-auth-links text-center mb-3">
                 <p>- OR -</p>
                 <a href="{{ path('connect_facebook_start') }}" class="btn btn-block btn-primary">
-                    <i class="fab fa-facebook mr-2"></i> Sign up using Facebook
+                    <i class="fab fa-facebook mr-2"></i> Register using Facebook
                 </a>
             </div>
             <p class="mb-0">

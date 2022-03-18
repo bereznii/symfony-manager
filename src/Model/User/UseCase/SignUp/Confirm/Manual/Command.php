@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Model\User\UseCase\SignUp\Confirm;
+namespace App\Model\User\UseCase\SignUp\Confirm\Manual;
 
 class Command
 {
     /**
-     * @param string $token
+     * @param string $id
      */
     public function __construct(
-        public string $token
+        public string $id
     ) {}
 }
