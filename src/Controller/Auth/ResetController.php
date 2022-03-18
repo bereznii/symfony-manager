@@ -22,11 +22,11 @@ class ResetController extends AbstractController
     ) {}
 
     /**
-     * @Route("/reset", name="auth.reset")
      * @param Request $request
      * @param Reset\Request\Handler $handler
      * @return Response
      */
+    #[Route(path: '/reset', name: 'auth.reset')]
     public function request(Request $request, Reset\Request\Handler $handler): Response
     {
         $command = new Reset\Request\Command();
@@ -51,13 +51,14 @@ class ResetController extends AbstractController
     }
 
     /**
-     * @Route("/reset/{token}", name="auth.reset.reset")
      * @param string $token
      * @param Request $request
      * @param Reset\Reset\Handler $handler
      * @param UserFetcher $users
      * @return Response
+     * @throws \Doctrine\DBAL\Exception
      */
+    #[Route(path: '/reset/{token}', name: 'auth.reset.reset')]
     public function reset(string $token, Request $request, Reset\Reset\Handler $handler, UserFetcher $users): Response
     {
         if (!$users->existsByResetToken($token)) {

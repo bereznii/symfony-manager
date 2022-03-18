@@ -62,7 +62,7 @@ class RegisterController extends AbstractController
 
         try {
             $handler->handle($command);
-            $this->addFlash('success', 'Email is successfully confirmed.');
+            $this->addFlash('success', 'Email is confirmed.');
             return $this->redirectToRoute('home');
         } catch (\DomainException $e) {
             $this->logger->error($e->getMessage(), ['exception' => $e]);

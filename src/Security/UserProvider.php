@@ -4,14 +4,11 @@ declare(strict_types=1);
 
 namespace App\Security;
 
-use App\ReadModel\User\AuthView;
 use App\ReadModel\User\UserFetcher;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
-use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
-use Webmozart\Assert\Assert;
 
 class UserProvider implements UserProviderInterface
 {
@@ -23,7 +20,7 @@ class UserProvider implements UserProviderInterface
     ) {}
 
     /**
-     * @param $class
+     * @param string $class
      * @return bool
      */
     public function supportsClass(string $class): bool

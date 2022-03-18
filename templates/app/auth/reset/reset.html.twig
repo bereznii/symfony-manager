@@ -1,16 +1,31 @@
-{% extends 'base.html.twig' %}
+{% extends 'layout/auth.html.twig' %}
 
 {% block title %}Password Reset{% endblock %}
 
 {% block body %}
+    <div class="card">
+        <div class="card-body login-card-body">
+            <p class="login-box-msg">Password reset</p>
+            {{ form_start(form) }}
 
-    <h1>Password Reset</h1>
+            {% include 'partials/_flashes.html.twig' %}
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+            <div class="input-group mb-3">
+                {{ form_widget(form.password, {'attr': {'placeholder': 'Password', 'class': 'form-control'}}) }}
+                {{ form_errors(form.password) }}
+                <div class="input-group-append">
+                    <div class="input-group-text">
+                        <span class="fas fa-lock"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary btn-block">Reset</button>
+                </div>
+            </div>
 
-    {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <div class="form-group">
-        <button type="submit" class="btn btn-primary">Reset</button>
+            {{ form_end(form) }}
+        </div>
     </div>
-    {{ form_end(form) }}
-
 {% endblock %}
