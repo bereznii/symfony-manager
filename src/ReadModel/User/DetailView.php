@@ -12,7 +12,9 @@ class DetailView
      * @param string|null $email
      * @param string $role
      * @param string $status
-     * @param array|null $networks
+     * @param string $first_name
+     * @param string $last_name
+     * @param array $networks
      */
     public function __construct(
         public string $id,
@@ -20,6 +22,8 @@ class DetailView
         public ?string $email,
         public string $role,
         public string $status,
+        public string $first_name,
+        public string $last_name,
         public array $networks = [],
     ) {}
 }

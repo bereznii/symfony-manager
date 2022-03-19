@@ -66,7 +66,8 @@ class UserFetcher
                 'email',
                 'password_hash',
                 'role',
-                'status'
+                'status',
+                'TRIM(CONCAT(name_first, \' \', name_last)) as name',
             )
             ->from('user_users')
             ->where('email = :email')
@@ -90,7 +91,8 @@ class UserFetcher
                 'CONCAT(n.network, \':\', n.identity) AS email',
                 'u.password_hash',
                 'u.role',
-                'u.status'
+                'u.status',
+                'TRIM(CONCAT(name_first, \' \', name_last)) as name',
             )
             ->from('user_users', 'u')
             ->innerJoin('u', 'user_user_networks', 'n', 'n.user_id = u.id')
@@ -125,6 +127,28 @@ class UserFetcher
     }
 
     /**
+     * @param string $token
+     * @return array|null
+     * @throws \Doctrine\DBAL\Exception
+     */
+    public function findByRegisterConfirmToken(string $token): ?array
+    {
+        $result = $this->connection->createQueryBuilder()
+            ->select(
+                'id',
+                'email',
+                'role',
+                'status'
+            )
+            ->from('user_users')
+            ->where('confirm_token = :confirm_token')
+            ->setParameter('confirm_token', $token)
+            ->executeQuery()->fetchAssociative();
+
+        return $result ?: null;
+    }
+
+    /**
      * @param string $id
      * @return DetailView
      * @throws \Doctrine\DBAL\Exception
@@ -135,6 +159,8 @@ class UserFetcher
             ->select(
                 'id',
                 'created_at',
+                'name_first as first_name',
+                'name_last as last_name',
                 'email',
                 'role',
                 'status'
@@ -158,5 +184,18 @@ class UserFetcher
         }
 
         return $detailView;
+    }
+
+    /**
+     * @param string $id
+     * @return DetailView
+     * @throws \Doctrine\DBAL\Exception
+     */
+    public function getDetail(string $id): DetailView
+    {
+        if (!$detail = $this->findDetail($id)) {
+            throw new \LogicException('User is not found');
+        }
+        return $detail;
     }
 }

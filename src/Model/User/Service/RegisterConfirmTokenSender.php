@@ -34,7 +34,7 @@ class RegisterConfirmTokenSender
         $message = (new Email())
             ->from(new Address(...$this->from))
             ->to($email->getValue())
-            ->subject('Sign Up Confirmation')
+            ->subject('Register Confirmation')
             ->html($this->twig->render('mail/user/signup.html.twig', [
                 'token' => $token
             ]));

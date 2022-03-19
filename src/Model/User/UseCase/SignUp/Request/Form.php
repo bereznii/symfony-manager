@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Model\User\UseCase\SignUp\Request;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\{EmailType,PasswordType};
+use Symfony\Component\Form\Extension\Core\Type\{EmailType, PasswordType, TextType};
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -20,7 +20,9 @@ class Form extends AbstractType
     {
         $builder
             ->add('email', EmailType::class)
-            ->add('password', PasswordType::class);
+            ->add('password', PasswordType::class)
+            ->add('firstName', TextType::class)
+            ->add('lastName', TextType::class);
     }
 
     /**

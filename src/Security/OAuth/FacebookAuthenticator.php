@@ -25,7 +25,7 @@ use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPasspor
 
 class FacebookAuthenticator extends OAuth2Authenticator
 {
-    private const FACEBOOK = 'facebook';
+    public const FACEBOOK = 'facebook';
 
     /**
      * @param ClientRegistry $clientRegistry
@@ -64,11 +64,14 @@ class FacebookAuthenticator extends OAuth2Authenticator
                 /** @var FacebookUser $facebookUser */
                 $facebookUser = $client->fetchUserFromToken($accessToken);
                 $identifier = self::FACEBOOK . ':' . $facebookUser->getId();
+                $command = new Command(self::FACEBOOK, $facebookUser->getId());
+                $command->firstName = $facebookUser->getFirstName();
+                $command->lastName = $facebookUser->getLastName();
 
                 try {
                     return $this->userProvider->loadUserByIdentifier($identifier);
                 } catch (UserNotFoundException) {
-                    $this->handler->handle(new Command(self::FACEBOOK, $facebookUser->getId()));
+                    $this->handler->handle($command);
                     return $this->userProvider->loadUserByIdentifier($identifier);
                 }
             })

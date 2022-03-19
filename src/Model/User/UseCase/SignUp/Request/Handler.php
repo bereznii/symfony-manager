@@ -7,6 +7,7 @@ namespace App\Model\User\UseCase\SignUp\Request;
 use App\Model\Flusher;
 use App\Model\User\Entity\User\Email;
 use App\Model\User\Entity\User\Id;
+use App\Model\User\Entity\User\Name;
 use App\Model\User\Entity\User\User;
 use App\Model\User\Entity\User\UserRepository;
 use App\Model\User\Service\RegisterConfirmTokenSender;
@@ -39,11 +40,15 @@ class Handler
         }
 
         $user = User::signUpByEmail(
-            Id::next(),
-            new \DateTimeImmutable(),
-            $email,
-            $this->hasher->hash($command->password),
-            $token = $this->tokenizer->generate()
+            id: Id::next(),
+            created_at: new \DateTimeImmutable(),
+            email: $email,
+            hash: $this->hasher->hash($command->password),
+            confirmToken: $token = $this->tokenizer->generate(),
+            name: new Name(
+                $command->firstName,
+                $command->lastName,
+            )
         );
 
         $this->users->add($user);

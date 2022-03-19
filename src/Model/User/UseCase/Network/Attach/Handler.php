@@ -2,15 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Model\User\UseCase\Network\Auth;
+namespace App\Model\User\UseCase\Network\Attach;
 
 use App\Model\Flusher;
 use App\Model\User\Entity\User\Id;
-use App\Model\User\Entity\User\Name;
-use App\Model\User\Entity\User\User;
 use App\Model\User\Entity\User\UserRepository;
-use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\NoResultException;
 
 class Handler
 {
@@ -26,27 +22,23 @@ class Handler
     /**
      * @param Command $command
      * @return void
-     * @throws NoResultException
-     * @throws NonUniqueResultException
+     * @throws \Doctrine\ORM\EntityNotFoundException
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function handle(Command $command): void
     {
         if ($this->users->hasByNetworkIdentity($command->network, $command->identity)) {
-            throw new \DomainException('User already exists.');
+            throw new \DomainException('Profile is already in use.');
         }
 
-        $user = User::signUpByNetwork(
-            Id::next(),
-            new \DateTimeImmutable(),
+        $user = $this->users->get(new Id($command->user));
+
+        $user->attachNetwork(
             $command->network,
-            $command->identity,
-            new Name(
-                $command->firstName,
-                $command->lastName,
-            )
+            $command->identity
         );
 
-        $this->users->add($user);
         $this->flusher->flush();
     }
 }

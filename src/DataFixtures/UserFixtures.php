@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Model\User\Entity\User\Email;
+use App\Model\User\Entity\User\Name;
 use App\Model\User\Entity\User\Role;
 use App\Model\User\Entity\User\User;
 use App\Model\User\Entity\User\Id;
@@ -15,6 +16,7 @@ class UserFixtures extends Fixture
 {
     /**
      * @param PasswordHasher $hasher
+     * @param UserPasswordHasherInterface $defaultPasswordHasher
      */
     public function __construct(
         private PasswordHasher $hasher,
@@ -34,7 +36,8 @@ class UserFixtures extends Fixture
             new \DateTimeImmutable(),
             new Email('admin@app.test'),
             $hash,
-            'token'
+            'token',
+            new Name('John','Doe')
         );
 
         $user->confirmSignUp();
