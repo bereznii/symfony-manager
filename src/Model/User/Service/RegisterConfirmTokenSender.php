@@ -10,7 +10,7 @@ use Symfony\Component\Mime\Email;
 use App\Model\User\Entity\User\Email as UserEmail;
 use Twig\Environment;
 
-class ConfirmTokenSender
+class RegisterConfirmTokenSender
 {
     /**
      * @param MailerInterface $mailer
