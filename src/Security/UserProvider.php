@@ -83,10 +83,11 @@ class UserProvider implements UserProviderInterface
     {
         return new UserIdentity(
             id: $user['id'],
-            email: $identifier,
+            email: $user['email'] ?: $identifier,
             status: $user['status'],
             password: $user['password_hash'],
             role: $user['role'],
+            display: $user['name'] ?: $identifier
         );
     }
 }

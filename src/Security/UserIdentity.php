@@ -17,13 +17,15 @@ class UserIdentity implements UserInterface, PasswordAuthenticatedUserInterface,
      * @param string $status
      * @param string|null $password
      * @param string $role
+     * @param string $display
      */
     public function __construct(
         private string $id,
         private string $email,
         private string $status,
         private ?string $password,
-        private string $role
+        private string $role,
+        private string $display
     ) {}
 
     /**
@@ -77,6 +79,14 @@ class UserIdentity implements UserInterface, PasswordAuthenticatedUserInterface,
     }
 
     /**
+     * @return string
+     */
+    public function getDisplay(): string
+    {
+        return $this->display;
+    }
+
+    /**
      * @see UserInterface
      * @return void
      */
@@ -105,7 +115,6 @@ class UserIdentity implements UserInterface, PasswordAuthenticatedUserInterface,
 
         return
             $this->id === $user->id &&
-            $this->email === $user->email &&
             $this->password === $user->password &&
             $this->role === $user->role &&
             $this->status === $user->status;
