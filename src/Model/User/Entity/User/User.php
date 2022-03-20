@@ -20,6 +20,7 @@ class User
     private const STATUS_NEW = 'new';
     private const STATUS_WAIT = 'wait';
     public const STATUS_ACTIVE = 'active';
+    private const STATUS_BLOCKED = 'blocked';
 
     /** @var Id */
     #[ORM\Column(type: 'user_user_id',)]
@@ -86,10 +87,28 @@ class User
 
     /**
      * @param Id $id
+     * @param DateTimeImmutable $date
+     * @param Name $name
+     * @param Email $email
+     * @param string $hash
+     * @return static
+     */
+    public static function create(Id $id, \DateTimeImmutable $created_at, Name $name, Email $email, string $hash): self
+    {
+        $user = new self($id, $created_at, $name);
+        $user->email = $email;
+        $user->passwordHash = $hash;
+        $user->status = self::STATUS_ACTIVE;
+        return $user;
+    }
+
+    /**
+     * @param Id $id
      * @param DateTimeImmutable $created_at
      * @param Email $email
      * @param string $hash
      * @param string $confirmToken
+     * @param Name $name
      * @return static
      */
     public static function signUpByEmail(Id $id, DateTimeImmutable $created_at, Email $email, string $hash, string $confirmToken, Name $name): self
@@ -107,6 +126,7 @@ class User
      * @param DateTimeImmutable $created_at
      * @param string $network
      * @param string $identity
+     * @param Name $name
      * @return static
      */
     public static function signUpByNetwork(Id $id, \DateTimeImmutable $created_at, string $network, string $identity, Name $name): self
@@ -206,6 +226,14 @@ class User
     }
 
     /**
+     * @return bool
+     */
+    public function isBlocked(): bool
+    {
+        return $this->status === self::STATUS_BLOCKED;
+    }
+
+    /**
      * @return Id
      */
     public function getId(): Id
@@ -246,6 +274,14 @@ class User
     }
 
     /**
+     * @return Name
+     */
+    public function getName(): Name
+    {
+        return $this->name;
+    }
+
+    /**
      * @return Email|null
      */
     public function getNewEmail(): ?Email
@@ -267,6 +303,22 @@ class User
     public function getResetToken(): ?ResetToken
     {
         return $this->resetToken;
+    }
+
+    /**
+     * @return Role
+     */
+    public function getRole(): Role
+    {
+        return $this->role;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatus(): string
+    {
+        return $this->status;
     }
 
     /**
@@ -298,6 +350,28 @@ class User
             throw new \DomainException('Role is already set.');
         }
         $this->role = $role;
+    }
+
+    /**
+     * @return void
+     */
+    public function activate(): void
+    {
+        if ($this->isActive()) {
+            throw new \DomainException('User is already active.');
+        }
+        $this->status = self::STATUS_ACTIVE;
+    }
+
+    /**
+     * @return void
+     */
+    public function block(): void
+    {
+        if ($this->isBlocked()) {
+            throw new \DomainException('User is already blocked.');
+        }
+        $this->status = self::STATUS_BLOCKED;
     }
 
     /**
@@ -341,6 +415,17 @@ class User
     public function changeName(Name $name): void
     {
         $this->name = $name;
+    }
+
+    /**
+     * @param Email $email
+     * @param Name $name
+     * @return void
+     */
+    public function edit(Email $email, Name $name): void
+    {
+        $this->name = $name;
+        $this->email = $email;
     }
 
     /**

@@ -1,12 +1,13 @@
 {% extends 'layout/base.html.twig' %}
 
-{% block title %}Profile{% endblock %}
+{% block title %}Users{% endblock %}
 
 {% block breadcrumbs %}
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{{ path('home') }}">Home</a></li>
-        <li class="breadcrumb-item"><a href="{{ path('profile') }}">Profile</a></li>
-        <li class="breadcrumb-item active">Name</li>
+        <li class="breadcrumb-item"><a href="{{ path('users') }}">Users</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('users.show', {'id': user.id}) }}">{{ user.name.full }}</a></li>
+        <li class="breadcrumb-item active">Edit</li>
     </ol>
 {% endblock %}
 
@@ -22,8 +23,12 @@
                     <div class="form-group">
                         {{ form_row(form.lastName, {'attr': {'placeholder': 'Last Name', 'autocomplete': 'off', 'class': 'form-control'}}) }}
                     </div>
-                    <button type="submit" class="btn btn-success">Set Name</button>
+                    <div class="form-group">
+                        {{ form_row(form.email, {'attr': {'placeholder': 'Email', 'autocomplete': 'off', 'class': 'form-control'}}) }}
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save</button>
                     {{ form_end(form) }}
+
                 </div>
             </div>
         </div>

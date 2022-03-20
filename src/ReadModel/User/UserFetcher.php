@@ -198,4 +198,26 @@ class UserFetcher
         }
         return $detail;
     }
+
+    /**
+     * @return array
+     * @throws \Doctrine\DBAL\Exception
+     */
+    public function all(): array
+    {
+        $res = $this->connection->createQueryBuilder()
+            ->select(
+                'id',
+                'created_at',
+                'TRIM(CONCAT(name_first, \' \', name_last)) AS name',
+                'email',
+                'role',
+                'status'
+            )
+            ->from('user_users')
+            ->orderBy('created_at', 'desc')
+            ->executeQuery()->fetchAllAssociative();
+
+        return $res;
+    }
 }

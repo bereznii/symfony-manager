@@ -1,12 +1,12 @@
 {% extends 'layout/base.html.twig' %}
 
-{% block title %}Profile{% endblock %}
+{% block title %}Users{% endblock %}
 
 {% block breadcrumbs %}
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{{ path('home') }}">Home</a></li>
-        <li class="breadcrumb-item"><a href="{{ path('profile') }}">Profile</a></li>
-        <li class="breadcrumb-item active">Email</li>
+        <li class="breadcrumb-item"><a href="{{ path('users') }}">Users</a></li>
+        <li class="breadcrumb-item active">Create</li>
     </ol>
 {% endblock %}
 
@@ -17,9 +17,15 @@
                 <div class="card-body">
                     {{ form_start(form) }}
                     <div class="form-group">
+                        {{ form_row(form.firstName, {'attr': {'placeholder': 'First Name', 'autocomplete': 'off', 'class': 'form-control'}}) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_row(form.lastName, {'attr': {'placeholder': 'Last Name', 'autocomplete': 'off', 'class': 'form-control'}}) }}
+                    </div>
+                    <div class="form-group">
                         {{ form_row(form.email, {'attr': {'placeholder': 'Email', 'autocomplete': 'off', 'class': 'form-control'}}) }}
                     </div>
-                    <button type="submit" class="btn btn-success">Set Email</button>
+                    <button type="submit" class="btn btn-primary">Create</button>
                     {{ form_end(form) }}
                 </div>
             </div>
