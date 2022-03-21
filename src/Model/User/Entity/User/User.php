@@ -17,10 +17,10 @@ use DomainException;
 #[ORM\UniqueConstraint(columns: ["reset_token_token"])]
 class User
 {
-    private const STATUS_NEW = 'new';
-    private const STATUS_WAIT = 'wait';
+    public const STATUS_NEW = 'new';
+    public const STATUS_WAIT = 'wait';
     public const STATUS_ACTIVE = 'active';
-    private const STATUS_BLOCKED = 'blocked';
+    public const STATUS_BLOCKED = 'blocked';
 
     /** @var Id */
     #[ORM\Column(type: 'user_user_id',)]

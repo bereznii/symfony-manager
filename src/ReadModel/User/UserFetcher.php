@@ -4,15 +4,22 @@ declare(strict_types=1);
 
 namespace App\ReadModel\User;
 
+use App\ReadModel\User\Filter\Filter;
+use App\ReadModel\User\View\DetailView;
+use App\ReadModel\User\View\NetworkView;
 use Doctrine\DBAL\Connection;
+use Knp\Component\Pager\Pagination\PaginationInterface;
+use Knp\Component\Pager\PaginatorInterface;
 
 class UserFetcher
 {
     /**
      * @param Connection $connection
+     * @param PaginatorInterface $paginator
      */
     public function __construct(
-        private Connection $connection
+        private Connection $connection,
+        private PaginatorInterface $paginator,
     ) {}
 
     /**
@@ -200,12 +207,16 @@ class UserFetcher
     }
 
     /**
-     * @return array
-     * @throws \Doctrine\DBAL\Exception
+     * @param Filter $filter
+     * @param int $page
+     * @param int $size
+     * @param string $sort
+     * @param string $direction
+     * @return PaginationInterface
      */
-    public function all(): array
+    public function all(Filter $filter, int $page, int $size, string $sort, string $direction): PaginationInterface
     {
-        $res = $this->connection->createQueryBuilder()
+        $qb = $this->connection->createQueryBuilder()
             ->select(
                 'id',
                 'created_at',
@@ -214,10 +225,34 @@ class UserFetcher
                 'role',
                 'status'
             )
-            ->from('user_users')
-            ->orderBy('created_at', 'desc')
-            ->executeQuery()->fetchAllAssociative();
+            ->from('user_users');
 
-        return $res;
+        if ($filter->name) {
+            $qb->andWhere($qb->expr()->like('LOWER(CONCAT(name_first, \' \', name_last))', ':name'));
+            $qb->setParameter('name', '%' . mb_strtolower($filter->name) . '%');
+        }
+
+        if ($filter->email) {
+            $qb->andWhere($qb->expr()->like('LOWER(email)', ':email'));
+            $qb->setParameter('email', '%' . mb_strtolower($filter->email) . '%');
+        }
+
+        if ($filter->status) {
+            $qb->andWhere('status = :status');
+            $qb->setParameter('status', $filter->status);
+        }
+
+        if ($filter->role) {
+            $qb->andWhere('role = :role');
+            $qb->setParameter('role', $filter->role);
+        }
+
+        if (!\in_array($sort, ['created_at', 'name', 'email', 'role', 'status'], true)) {
+            throw new \UnexpectedValueException('Cannot sort by ' . $sort);
+        }
+
+        $qb->orderBy($sort, $direction === 'desc' ? 'desc' : 'asc');
+
+        return $this->paginator->paginate($qb, $page, $size);
     }
 }
