@@ -14,11 +14,14 @@ use App\Model\User\UseCase\SignUp\Confirm;
 use App\ReadModel\User\Filter;
 use App\ReadModel\User\UserFetcher;
 use Psr\Log\LoggerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+#[Route(path: '/users', name: 'users')]
+#[IsGranted('ROLE_MANAGE_USERS')]
 class UsersController extends AbstractController
 {
     private const PER_PAGE = 2;
@@ -36,7 +39,7 @@ class UsersController extends AbstractController
      * @return Response
      * @throws \Doctrine\DBAL\Exception
      */
-    #[Route(path: '/users', name: 'users')]
+    #[Route(path: '', name: '')]
     public function index(Request $request, UserFetcher $fetcher): Response
     {
         $filter = new Filter\Filter();
@@ -65,7 +68,7 @@ class UsersController extends AbstractController
      * @throws \Doctrine\ORM\NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    #[Route(path: '/users/create', name: 'users.create')]
+    #[Route(path: '/create', name: '.create')]
     public function create(Request $request, Create\Handler $handler): Response
     {
         $command = new Create\Command();
@@ -95,9 +98,14 @@ class UsersController extends AbstractController
      * @return Response
      * @throws \Doctrine\ORM\EntityNotFoundException
      */
-    #[Route(path: '/{id}/edit', name: 'users.edit')]
+    #[Route(path: '/{id}/edit', name: '.edit')]
     public function edit(User $user, Request $request, Edit\Handler $handler): Response
     {
+        if ($user->getId()->getValue() === $this->getUser()->getId()) {
+            $this->addFlash('error', 'Unable to edit yourself.');
+            return $this->redirectToRoute('users.show', ['id' => $user->getId()]);
+        }
+
         $command = Edit\Command::fromUser($user);
 
         $form = $this->createForm(Edit\Form::class, $command);
@@ -126,7 +134,7 @@ class UsersController extends AbstractController
      * @return Response
      * @throws \Doctrine\ORM\EntityNotFoundException
      */
-    #[Route(path: '/{id}/role', name: 'users.role')]
+    #[Route(path: '/{id}/role', name: '.role')]
     public function role(User $user, Request $request, Role\Handler $handler): Response
     {
         if ($user->getId()->getValue() === $this->getUser()->getId()) {
@@ -162,7 +170,7 @@ class UsersController extends AbstractController
      * @return Response
      * @throws \Doctrine\ORM\EntityNotFoundException
      */
-    #[Route(path: '/{id}/confirm', name: 'users.confirm', methods: ['POST'])]
+    #[Route(path: '/{id}/confirm', name: '.confirm', methods: ['POST'])]
     public function confirm(User $user, Request $request, Confirm\Manual\Handler $handler): Response
     {
         if (!$this->isCsrfTokenValid('confirm', $request->request->get('token'))) {
@@ -188,7 +196,7 @@ class UsersController extends AbstractController
      * @return Response
      * @throws \Doctrine\ORM\EntityNotFoundException
      */
-    #[Route(path: '/{id}/activate', name: 'users.activate', methods: ['POST'])]
+    #[Route(path: '/{id}/activate', name: '.activate', methods: ['POST'])]
     public function activate(User $user, Request $request, Activate\Handler $handler): Response
     {
         if (!$this->isCsrfTokenValid('activate', $request->request->get('token'))) {
@@ -214,7 +222,7 @@ class UsersController extends AbstractController
      * @return Response
      * @throws \Doctrine\ORM\EntityNotFoundException
      */
-    #[Route(path: '/{id}/block', name: 'users.block', methods: ['POST'])]
+    #[Route(path: '/{id}/block', name: '.block', methods: ['POST'])]
     public function block(User $user, Request $request, Block\Handler $handler): Response
     {
         if (!$this->isCsrfTokenValid('block', $request->request->get('token'))) {
@@ -242,7 +250,7 @@ class UsersController extends AbstractController
      * @param User $user
      * @return Response
      */
-    #[Route(path: '/{id}', name: 'users.show')]
+    #[Route(path: '/{id}', name: '.show')]
     public function show(User $user): Response
     {
         return $this->render('app/users/show.html.twig', compact('user'));
