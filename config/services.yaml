@@ -41,6 +41,6 @@ services:
         arguments:
             - '@Predis\Client'
 
-#    App\Widget\:
-#        resource: '../src/Widget'
-#        tags: ['twig.extension']
+    App\Twig\Widget\:
+        resource: '../src/Twig/Widget'
+        tags: ['twig.extension']

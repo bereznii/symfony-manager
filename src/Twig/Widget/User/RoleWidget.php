@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Widget\User;
+namespace App\Twig\Widget\User;
 
 use Twig\Environment;
 use Twig\Extension\AbstractExtension;
