@@ -19,6 +19,12 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
+            - '../src/Model/User/Entity'
+            - '../src/Model/Work/Entity'
+
+    App\Model\User\Entity\User\UserRepository: ~
+    App\Model\Work\Entity\Membership\Group\GroupRepository: ~
+    App\Model\Work\Entity\Membership\Member\MemberRepository: ~
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
