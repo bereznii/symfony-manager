@@ -28,7 +28,7 @@ class Form extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('group', Type\ChoiceType::class, ['choices' => array_column($this->groups->all(), 'id', 'name')])
+            ->add('group', Type\ChoiceType::class, ['choices' => $this->groups->assoc()])
             ->add('firstName', Type\TextType::class)
             ->add('lastName', Type\TextType::class)
             ->add('email', Type\EmailType::class);

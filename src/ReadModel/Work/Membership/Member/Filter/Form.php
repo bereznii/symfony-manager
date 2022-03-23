@@ -37,7 +37,7 @@ class Form extends AbstractType
                 'onchange' => 'this.form.submit()',
             ]])
             ->add('group', Type\ChoiceType::class, [
-                'choices' => array_column($this->groups->all(), 'id', 'name'),
+                'choices' => $this->groups->assoc(),
                 'required' => false,
                 'placeholder' => 'All groups',
                 'attr' => ['onchange' => 'this.form.submit()']

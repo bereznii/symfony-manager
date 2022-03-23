@@ -29,7 +29,7 @@ class Form extends AbstractType
     {
         $builder
             ->add('group', Type\ChoiceType::class, [
-                'choices' => array_column($this->groups->all(), 'id', 'name')
+                'choices' => $this->groups->assoc()
             ]);
     }
 

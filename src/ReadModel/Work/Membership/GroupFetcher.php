@@ -19,12 +19,31 @@ class GroupFetcher
      * @return array
      * @throws \Doctrine\DBAL\Exception
      */
+    public function assoc(): array
+    {
+        $res = $this->connection->createQueryBuilder()
+            ->select(
+                'id',
+                'name'
+            )
+            ->from('work_members_groups')
+            ->orderBy('name')
+            ->executeQuery()->fetchAllAssociative();
+
+        return array_column($res, 'id', 'name');
+    }
+
+    /**
+     * @return array
+     * @throws \Doctrine\DBAL\Exception
+     */
     public function all(): array
     {
         $res = $this->connection->createQueryBuilder()
             ->select(
                 'g.id',
-                'g.name'
+                'g.name',
+                '(SELECT COUNT(id) FROM work_members_members m WHERE m.group_id = g.id) AS members_count'
             )
             ->from('work_members_groups', 'g')
             ->orderBy('name')

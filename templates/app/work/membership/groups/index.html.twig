@@ -10,6 +10,7 @@
 {% endblock %}
 
 {% block body %}
+    {{ include('app/work/membership/groups/_tabs.html.twig') }}
     <div class="row">
         <div class="col-lg-12">
             <div class="form-group">
@@ -23,6 +24,7 @@
                         <thead>
                         <tr>
                             <th>Name</th>
+                            <th>Members</th>
                             <th></th>
                         </tr>
                         </thead>
@@ -31,16 +33,23 @@
                         {% for group in groups %}
                             <tr>
                                 <td>
-                                    {{ group.name }}
+                                    {% if group.members_count %}
+                                        <a href="{{ path('work.members', {'form': {'group': group.id}}) }}">{{ group.name }}</a>
+                                    {% else %}
+                                        {{ group.name }}
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {{ group.members_count }}
                                 </td>
                                 <td>
                                     <div class="d-flex flex-row">
-                                        <a href="{{ path('work.members.groups.edit', {'id': group.id}) }}" class="btn btn-sm btn-outline-primary mr-1">
+                                        <a href="{{ path('work.members.groups.edit', {'id': group.id}) }}" class="btn btn-sm btn-primary mr-1">
                                             <span class="fas fa-pencil-alt"></span>
                                         </a>
                                         <form action="{{ path('work.members.groups.delete', {'id': group.id}) }}" method="post" onsubmit="return confirm('Are you sure?')">
                                             <input type="hidden" name="token" value="{{ token }}" />
-                                            <button type="submit" class="btn btn-sm btn-outline-danger"><span class="fa fa-trash"></span></button>
+                                            <button type="submit" class="btn btn-sm btn-danger"><span class="fa fa-trash"></span></button>
                                         </form>
                                     </div>
                                 </td>
