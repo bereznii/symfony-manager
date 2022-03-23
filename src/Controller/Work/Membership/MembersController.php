@@ -93,7 +93,7 @@ class MembersController extends AbstractController
             }
         }
 
-        return $this->render('app/work/membership/members/members/create.html.twig', [
+        return $this->render('app/work/membership/members/create.html.twig', [
             'form' => $form->createView(),
         ]);
     }

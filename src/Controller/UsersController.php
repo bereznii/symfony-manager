@@ -13,6 +13,7 @@ use App\Model\User\UseCase\Role;
 use App\Model\User\UseCase\SignUp\Confirm;
 use App\ReadModel\User\Filter;
 use App\ReadModel\User\UserFetcher;
+use App\ReadModel\Work\Membership\Member\MemberFetcher;
 use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -24,7 +25,7 @@ use Symfony\Component\Routing\Annotation\Route;
 #[IsGranted('ROLE_MANAGE_USERS')]
 class UsersController extends AbstractController
 {
-    private const PER_PAGE = 2;
+    private const PER_PAGE = 10;
 
     /**
      * @param LoggerInterface $logger
@@ -248,11 +249,14 @@ class UsersController extends AbstractController
 
     /**
      * @param User $user
+     * @param MemberFetcher $members
      * @return Response
      */
     #[Route(path: '/{id}', name: '.show')]
-    public function show(User $user): Response
+    public function show(User $user, MemberFetcher $members): Response
     {
-        return $this->render('app/users/show.html.twig', compact('user'));
+        $member = $members->find($user->getId()->getValue());
+
+        return $this->render('app/users/show.html.twig', compact('user', 'member'));
     }
 }

@@ -98,13 +98,13 @@ class MemberFetcher
      * @return bool
      * @throws \Doctrine\DBAL\Exception
      */
-    public function exists(string $id): bool
+    public function exists(string $id)
     {
         return $this->connection->createQueryBuilder()
                 ->select('COUNT (id)')
                 ->from('work_members_members')
                 ->where('id = :id')
                 ->setParameter('id', $id)
-                ->execute()->fetchColumn() > 0;
+                ->executeQuery()->fetchOne() > 0;
     }
 }
