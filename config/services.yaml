@@ -25,6 +25,7 @@ services:
     App\Model\User\Entity\User\UserRepository: ~
     App\Model\Work\Entity\Membership\Group\GroupRepository: ~
     App\Model\Work\Entity\Membership\Member\MemberRepository: ~
+    App\Model\Work\Entity\Projects\Project\ProjectRepository: ~
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
@@ -51,6 +52,7 @@ services:
         resource: '../src/Twig/Widget'
         tags: ['twig.extension']
 
-    App\Menu\SidebarMenu:
-        tags:
-            - { name: knp_menu.menu_builder, method: build, alias: sidebar }
+    App\Twig\Menu\SidebarMenu:
+        tags: [ { name: knp_menu.menu_builder, method: build, alias: sidebar } ]
+    App\Twig\Menu\Work\ProjectMenu:
+        tags: [ { name: knp_menu.menu_builder, method: build, alias: work_project } ]

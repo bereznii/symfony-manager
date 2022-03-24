@@ -1,0 +1,7 @@
+<div class="row">
+    <div class="col-lg-12">
+        {% set menu = knp_menu_get('work_project', [], {'project_id': project.id} ) %}
+        {{ knp_menu_render(menu, {'currentClass': 'active'}) }}
+        <hr>
+    </div>
+</div>

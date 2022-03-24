@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Menu;
+namespace App\Twig\Menu;
 
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
@@ -40,6 +40,17 @@ class SidebarMenu
             ->setExtra('safe_label',true);
 
         $menu->addChild('Work')->setAttribute('class', 'nav-header');
+
+        $menu->addChild('Projects', ['route' => 'work.projects'])
+            ->setExtra('routes', [
+                ['route' => 'work.projects'],
+                ['pattern' => '/^work\.projects\..+/']
+            ])
+            ->setExtra('icon', 'nav-icon fas fa-briefcase')
+            ->setAttribute('class', 'nav-item')
+            ->setLinkAttribute('class', 'nav-link')
+            ->setLabel('<p>Projects</p>')
+            ->setExtra('safe_label',true);
 
         if ($this->auth->isGranted('ROLE_WORK_MANAGE_MEMBERS')) {
             $menu->addChild('Membership', ['route' => 'work.membership.members'])
