@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[IsGranted('ROLE_WORK_MANAGE_MEMBERS')]
-#[Route(path: '/work/membership/groups', name: 'work.members.groups')]
+#[Route(path: '/work/membership/groups', name: 'work.membership.groups')]
 class GroupsController extends AbstractController
 {
     /**
@@ -56,9 +56,9 @@ class GroupsController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             try {
                 $handler->handle($command);
-                return $this->redirectToRoute('work.members.groups');
+                return $this->redirectToRoute('work.membership.groups');
             } catch (\DomainException $e) {
-                $this->logger->error($e->getMessage(), ['exception' => $e]);
+                $this->logger->warning($e->getMessage(), ['exception' => $e]);
                 $this->addFlash('error', $e->getMessage());
             }
         }
@@ -85,9 +85,9 @@ class GroupsController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             try {
                 $handler->handle($command);
-                return $this->redirectToRoute('work.members.groups.show', ['id' => $group->getId()]);
+                return $this->redirectToRoute('work.membership.groups.show', ['id' => $group->getId()]);
             } catch (\DomainException $e) {
-                $this->logger->error($e->getMessage(), ['exception' => $e]);
+                $this->logger->warning($e->getMessage(), ['exception' => $e]);
                 $this->addFlash('error', $e->getMessage());
             }
         }
@@ -108,20 +108,20 @@ class GroupsController extends AbstractController
     public function delete(Group $group, Request $request, Remove\Handler $handler): Response
     {
         if (!$this->isCsrfTokenValid('delete', $request->request->get('token'))) {
-            return $this->redirectToRoute('work.members.groups.show', ['id' => $group->getId()]);
+            return $this->redirectToRoute('work.membership.groups.show', ['id' => $group->getId()]);
         }
 
         $command = new Remove\Command($group->getId()->getValue());
 
         try {
             $handler->handle($command);
-            return $this->redirectToRoute('work.members.groups');
+            return $this->redirectToRoute('work.membership.groups');
         } catch (\DomainException $e) {
-            $this->logger->error($e->getMessage(), ['exception' => $e]);
+            $this->logger->warning($e->getMessage(), ['exception' => $e]);
             $this->addFlash('error', $e->getMessage());
         }
 
-        return $this->redirectToRoute('work.members.groups.show', ['id' => $group->getId()]);
+        return $this->redirectToRoute('work.membership.groups.show', ['id' => $group->getId()]);
     }
 
     /**
@@ -130,6 +130,6 @@ class GroupsController extends AbstractController
     #[Route(path: '/{id}', name: '.show')]
     public function show(): Response
     {
-        return $this->redirectToRoute('work.members.groups');
+        return $this->redirectToRoute('work.membership.groups');
     }
 }

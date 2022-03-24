@@ -24,7 +24,7 @@
                         <div class="col-md-2">{{ form_row(form.status, {'attr': {'class': 'form-control'}}) }}</div>
                         <div class="col-md-2">
                             <button type="submit" class="btn btn-primary">Filter</button>
-                            <a href="{{ path('work.members') }}" class="btn btn-outline-secondary">Reset</a>
+                            <a href="{{ path('work.membership.members') }}" class="btn btn-outline-secondary">Reset</a>
                         </div>
                     </div>
                     {{ form_end(form) }}
@@ -47,7 +47,7 @@
                         <tbody>
                         {% for member in pagination %}
                             <tr>
-                                <td><a href="{{ path('work.members.show', {'id': member.id}) }}">{{ member.name }}</a></td>
+                                <td><a href="{{ path('work.membership.members.show', {'id': member.id}) }}">{{ member.name }}</a></td>
                                 <td>{{ member.email }}</td>
                                 <td>{{ member.group }}</td>
                                 <td>{{ member_status(member.status) }}</td>

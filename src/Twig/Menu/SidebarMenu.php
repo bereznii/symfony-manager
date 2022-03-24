@@ -42,10 +42,10 @@ class SidebarMenu
         $menu->addChild('Work')->setAttribute('class', 'nav-header');
 
         if ($this->auth->isGranted('ROLE_WORK_MANAGE_MEMBERS')) {
-            $menu->addChild('Membership', ['route' => 'work.members'])
+            $menu->addChild('Membership', ['route' => 'work.membership.members'])
                 ->setExtra('routes', [
-                    ['route' => 'work.members'],
-                    ['pattern' => '/^work\.members\..+/']
+                    ['route' => 'work.membership.members'],
+                    ['pattern' => '/^work\.membership\..+/']
                 ])
                 ->setExtra('icon', 'nav-icon fas fa-users')
                 ->setAttribute('class', 'nav-item')

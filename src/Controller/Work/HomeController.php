@@ -16,6 +16,6 @@ class HomeController extends AbstractController
     #[Route(path: '/work', name: 'work')]
     public function index(): Response
     {
-        return $this->redirectToRoute('work.members.groups');
+        return $this->redirectToRoute('work.membership.groups');
     }
 }

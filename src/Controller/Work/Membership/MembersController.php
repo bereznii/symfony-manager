@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route(path: '/work/members', name: 'work.members')]
+#[Route(path: '/work/membership/members', name: 'work.membership.members')]
 #[IsGranted('ROLE_WORK_MANAGE_MEMBERS')]
 class MembersController extends AbstractController
 {
@@ -86,9 +86,9 @@ class MembersController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             try {
                 $handler->handle($command);
-                return $this->redirectToRoute('work.members.show', ['id' => $user->getId()]);
+                return $this->redirectToRoute('work.membership.members.show', ['id' => $user->getId()]);
             } catch (\DomainException $e) {
-                $this->logger->error($e->getMessage(), ['exception' => $e]);
+                $this->logger->warning($e->getMessage(), ['exception' => $e]);
                 $this->addFlash('error', $e->getMessage());
             }
         }
@@ -115,9 +115,9 @@ class MembersController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             try {
                 $handler->handle($command);
-                return $this->redirectToRoute('work.members.show', ['id' => $member->getId()]);
+                return $this->redirectToRoute('work.membership.members.show', ['id' => $member->getId()]);
             } catch (\DomainException $e) {
-                $this->logger->error($e->getMessage(), ['exception' => $e]);
+                $this->logger->warning($e->getMessage(), ['exception' => $e]);
                 $this->addFlash('error', $e->getMessage());
             }
         }
@@ -145,9 +145,9 @@ class MembersController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             try {
                 $handler->handle($command);
-                return $this->redirectToRoute('work.members.show', ['id' => $member->getId()]);
+                return $this->redirectToRoute('work.membership.members.show', ['id' => $member->getId()]);
             } catch (\DomainException $e) {
-                $this->logger->error($e->getMessage(), ['exception' => $e]);
+                $this->logger->warning($e->getMessage(), ['exception' => $e]);
                 $this->addFlash('error', $e->getMessage());
             }
         }
@@ -168,7 +168,7 @@ class MembersController extends AbstractController
     public function archive(Member $member, Request $request, Archive\Handler $handler): Response
     {
         if (!$this->isCsrfTokenValid('archive', $request->request->get('token'))) {
-            return $this->redirectToRoute('work.members.show', ['id' => $member->getId()]);
+            return $this->redirectToRoute('work.membership.members.show', ['id' => $member->getId()]);
         }
 
         $command = new Archive\Command($member->getId()->getValue());
@@ -176,11 +176,11 @@ class MembersController extends AbstractController
         try {
             $handler->handle($command);
         } catch (\DomainException $e) {
-            $this->logger->error($e->getMessage(), ['exception' => $e]);
+            $this->logger->warning($e->getMessage(), ['exception' => $e]);
             $this->addFlash('error', $e->getMessage());
         }
 
-        return $this->redirectToRoute('work.members.show', ['id' => $member->getId()]);
+        return $this->redirectToRoute('work.membership.members.show', ['id' => $member->getId()]);
     }
 
     /**
@@ -193,12 +193,12 @@ class MembersController extends AbstractController
     public function reinstate(Member $member, Request $request, Reinstate\Handler $handler): Response
     {
         if (!$this->isCsrfTokenValid('reinstate', $request->request->get('token'))) {
-            return $this->redirectToRoute('work.members.show', ['id' => $member->getId()]);
+            return $this->redirectToRoute('work.membership.members.show', ['id' => $member->getId()]);
         }
 
         if ($member->getId()->getValue() === $this->getUser()->getId()) {
             $this->addFlash('error', 'Unable to reinstate yourself.');
-            return $this->redirectToRoute('work.members.show', ['id' => $member->getId()]);
+            return $this->redirectToRoute('work.membership.members.show', ['id' => $member->getId()]);
         }
 
         $command = new Reinstate\Command($member->getId()->getValue());
@@ -206,11 +206,11 @@ class MembersController extends AbstractController
         try {
             $handler->handle($command);
         } catch (\DomainException $e) {
-            $this->logger->error($e->getMessage(), ['exception' => $e]);
+            $this->logger->warning($e->getMessage(), ['exception' => $e]);
             $this->addFlash('error', $e->getMessage());
         }
 
-        return $this->redirectToRoute('work.members.show', ['id' => $member->getId()]);
+        return $this->redirectToRoute('work.membership.members.show', ['id' => $member->getId()]);
     }
 
     /**
