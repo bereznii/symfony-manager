@@ -15,6 +15,9 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserFixtures extends Fixture
 {
+    public const REFERENCE_USER = 'user_user';
+    public const REFERENCE_ADMIN = 'user_admin';
+
     private const LIMIT_USERS = 25;
 
     /**
@@ -47,6 +50,9 @@ class UserFixtures extends Fixture
         $user->changeRole(Role::admin());
         $manager->persist($user);
 
+        $savedAdmin = clone $user;
+        $this->setReference(self::REFERENCE_ADMIN, $savedAdmin);
+
         for ($i = 0; $i < self::LIMIT_USERS; $i++) {
             $user = User::signUpByEmail(
                 id: Id::next(),
@@ -60,8 +66,24 @@ class UserFixtures extends Fixture
                 )
             );
 
-            $user->confirmSignUp();
-            $manager->persist($user);
+            if (random_int(0, 2)) { // 2/3 chance to be confirmed
+                $user->confirmSignUp();
+
+                if (!boolval(random_int(0, 2))) { // 1/3 chance to be blocked
+                    $user->block();
+                }
+            }
+            if (random_int(0, 1)) { // 1/2 chance to be admin
+                $user->changeRole(Role::admin());
+            }
+
+            if ($i === 0) {
+                $savedUser = clone $user;
+                $this->setReference(self::REFERENCE_USER, $savedUser);
+                $manager->persist($savedUser);
+            } else {
+                $manager->persist($user);
+            }
         }
 
         $manager->flush();
