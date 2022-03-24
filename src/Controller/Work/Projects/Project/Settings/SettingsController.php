@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[ParamConverter(options: ['id' => 'project_id'])]
+#[ParamConverter('project', options: ['id' => 'project_id'])]
 #[IsGranted('ROLE_WORK_MANAGE_PROJECTS')]
 #[Route(path: '/work/projects/project/{project_id}/settings', name: 'work.projects.project.settings')]
 class SettingsController extends AbstractController

@@ -56,3 +56,5 @@ services:
         tags: [ { name: knp_menu.menu_builder, method: build, alias: sidebar } ]
     App\Twig\Menu\Work\ProjectMenu:
         tags: [ { name: knp_menu.menu_builder, method: build, alias: work_project } ]
+    App\Twig\Menu\Work\ProjectSettingsMenu:
+        tags: [ { name: knp_menu.menu_builder, method: build, alias: work_project_settings } ]
