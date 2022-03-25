@@ -1,0 +1,53 @@
+{% extends 'layout/base.html.twig' %}
+
+{% block title %}Roles{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ path('home') }}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('work.projects') }}">Projects</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('work.projects.roles') }}">Roles</a></li>
+        <li class="breadcrumb-item active">{{ role.name }}</li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="d-flex flex-row form-group">
+                <a href="{{ path('work.projects.roles.edit', {'id': role.id}) }}" class="btn btn-primary mr-2">Edit</a>
+                <form action="{{ path('work.projects.roles.delete', {'id': role.id}) }}" method="post" onsubmit="return confirm('Are you sure?')">
+                    <input type="hidden" name="token" value="{{ csrf_token('delete') }}" />
+                    <button type="submit" class="btn btn-danger mr-2">Delete</button>
+                </form>
+                <a href="{{ path('work.projects.roles.copy', {'id': role.id}) }}" class="btn btn-primary mr-2">Copy</a>
+            </div>
+        </div>
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <th>Name</th>
+                                <td>{{ role.name }}</td>
+                            </tr>
+                            <tr>
+                                <th>Permissions</th>
+                                <td>
+                                    <ul class="list-unstyled my-0">
+                                        {% for permission in role.permissions %}
+                                            <li>{{ permission.name|trans({}, 'work_permissions') }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
