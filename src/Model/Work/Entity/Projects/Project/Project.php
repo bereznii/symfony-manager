@@ -97,6 +97,36 @@ class Project
     }
 
     /**
+     * @param MemberId $id
+     * @return bool
+     */
+    public function hasMember(MemberId $id): bool
+    {
+        foreach ($this->memberships as $membership) {
+            if ($membership->isForMember($id)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * @param MemberId $id
+     * @param string $permission
+     * @return bool
+     */
+    public function isMemberGranted(MemberId $id, string $permission): bool
+    {
+        foreach ($this->memberships as $membership) {
+            /** @var Membership $membership */
+            if ($membership->isForMember($id)) {
+                return $membership->isGranted($permission);
+            }
+        }
+        return false;
+    }
+
+    /**
      * @param DepartmentId $id
      * @param string $name
      * @return void

@@ -7,6 +7,7 @@ namespace App\Controller\Work\Projects\Project\Settings;
 use App\Model\Work\Entity\Employees\Member\Id;
 use App\Model\Work\Entity\Projects\Project\Project;
 use App\Model\Work\UseCase\Projects\Project\Membership;
+use App\Security\Voter\Work\ProjectAccess;
 use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -16,7 +17,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[ParamConverter('project', options: ['id' => 'project_id'])]
-#[IsGranted('ROLE_WORK_MANAGE_PROJECTS')]
 #[Route(path: '/work/projects/{project_id}/settings/members', name: 'work.projects.project.settings.members')]
 class MembersController extends AbstractController
 {
@@ -34,6 +34,8 @@ class MembersController extends AbstractController
     #[Route(path: '', name: '')]
     public function index(Project $project): Response
     {
+        $this->denyAccessUnlessGranted(ProjectAccess::MANAGE_MEMBERS, $project);
+
         return $this->render('app/work/projects/project/settings/members/index.html.twig', [
             'project' => $project,
             'memberships' => $project->getMemberships(),
@@ -45,10 +47,13 @@ class MembersController extends AbstractController
      * @param Request $request
      * @param Membership\Add\Handler $handler
      * @return Response
+     * @throws \Exception
      */
     #[Route(path: '/assign', name: '.assign')]
     public function assign(Project $project, Request $request, Membership\Add\Handler $handler): Response
     {
+        $this->denyAccessUnlessGranted(ProjectAccess::MANAGE_MEMBERS, $project);
+
         if (!$project->getDepartments()) {
             $this->addFlash('error', 'Add departments before adding members.');
             return $this->redirectToRoute('work.projects.project.settings.members', ['project_id' => $project->getId()]);
@@ -85,6 +90,8 @@ class MembersController extends AbstractController
     #[Route(path: '/{member_id}/edit', name: '.edit')]
     public function edit(Project $project, string $member_id, Request $request, Membership\Edit\Handler $handler): Response
     {
+        $this->denyAccessUnlessGranted(ProjectAccess::MANAGE_MEMBERS, $project);
+
         $membership = $project->getMembership(new Id($member_id));
 
         $command = Membership\Edit\Command::fromMembership($project, $membership);
@@ -119,6 +126,8 @@ class MembersController extends AbstractController
     #[Route(path: '/{member_id}/revoke', name: '.revoke', methods: ['POST'])]
     public function revoke(Project $project, string $member_id, Request $request, Membership\Remove\Handler $handler): Response
     {
+        $this->denyAccessUnlessGranted(ProjectAccess::MANAGE_MEMBERS, $project);
+
         if (!$this->isCsrfTokenValid('revoke', $request->request->get('token'))) {
             return $this->redirectToRoute('work.projects.project.settings.departments', ['project_id' => $project->getId()]);
         }
