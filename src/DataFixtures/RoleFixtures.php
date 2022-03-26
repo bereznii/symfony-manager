@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\DataFixtures;
 
 use App\Model\Flusher;
-use App\Model\Work\Entity\Employees\Member\MemberRepository;
 use App\Model\Work\Entity\Projects\Role\Permission;
 use App\Model\Work\Entity\Projects\Role\Role;
 use App\Model\Work\Entity\Projects\Role\Id;
@@ -15,14 +14,7 @@ use Doctrine\Persistence\ObjectManager;
 
 class RoleFixtures extends Fixture
 {
-    /**
-     * @param RoleRepository $members
-     * @param Flusher $flusher
-     */
-    public function __construct(
-        private RoleRepository $roles,
-        private Flusher $flusher
-    ) {}
+    public const REFERENCE_MANAGER = 'work_project_role_manager';
 
     /**
      * @param ObjectManager $manager
@@ -31,10 +23,13 @@ class RoleFixtures extends Fixture
     public function load(ObjectManager $manager): void
     {
         $guest = $this->createRole('Guest', []);
-        $this->roles->add($guest);
+        $manager->persist($guest);
 
-        $manage = $this->createRole('Manager', [Permission::MANAGE_PROJECT_MEMBERS,]);
-        $this->roles->add($manage);
+        $manage = $this->createRole('Manager', [
+            Permission::MANAGE_PROJECT_MEMBERS,
+            ]);
+        $manager->persist($manage);
+        $this->setReference(self::REFERENCE_MANAGER, $manage);
 
         $manager->flush();
     }

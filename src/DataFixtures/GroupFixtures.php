@@ -11,15 +11,8 @@ use Doctrine\Persistence\ObjectManager;
 
 class GroupFixtures extends Fixture
 {
-    public const REFERENCE_GROUP = 'work_group';
-
-    /**
-     *
-     */
-    public function __construct(
-        private GroupRepository $groups,
-        private Flusher $flusher
-    ) {}
+    public const REFERENCE_STAFF = 'work_member_group_staff';
+    public const REFERENCE_CUSTOMERS = 'work_member_group_customers';
 
     /**
      * @param ObjectManager $manager
@@ -27,22 +20,21 @@ class GroupFixtures extends Fixture
      */
     public function load(ObjectManager $manager): void
     {
-        foreach (['Staff', 'Writers', 'Moderators', 'Marketers', 'Publicists'] as $key => $groupTitle) {
-            $group = new Group(
-                Id::next(),
-                $groupTitle
-            );
+        $staff = new Group(
+            Id::next(),
+            'Our Staff'
+        );
+        $manager->persist($staff);
+        $this->setReference(self::REFERENCE_STAFF, $staff);
 
-            if ($key === 0) {
-                $savedGroup = clone $group;
-                $this->setReference(GroupFixtures::REFERENCE_GROUP, $savedGroup);
-                $this->groups->add($savedGroup);
-            } else {
-                $this->groups->add($group);
-            }
+        $customers = new Group(
+            Id::next(),
+            'Customers'
+        );
 
-        }
+        $manager->persist($customers);
+        $this->setReference(self::REFERENCE_CUSTOMERS, $customers);
 
-        $this->flusher->flush();
+        $manager->flush();
     }
 }

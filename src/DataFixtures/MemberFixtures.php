@@ -12,18 +12,12 @@ use App\Model\Work\Entity\Employees\Member\MemberRepository;
 use App\Model\Work\Entity\Employees\Member\Name;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectManager;
 
 class MemberFixtures extends Fixture implements DependentFixtureInterface
 {
-    /**
-     * @param MemberRepository $members
-     * @param Flusher $flusher
-     */
-    public function __construct(
-        private MemberRepository $members,
-        private Flusher $flusher
-    ) {}
+    public const REFERENCE_ADMIN = 'work_member_admin';
 
     /**
      * @param ObjectManager $manager
@@ -35,32 +29,36 @@ class MemberFixtures extends Fixture implements DependentFixtureInterface
         $savedAdmin = $this->getReference(UserFixtures::REFERENCE_ADMIN);
         /** @var User $savedUser */
         $savedUser = $this->getReference(UserFixtures::REFERENCE_USER);
-        /** @var Group $savedGroup */
-        $savedGroup = $this->getReference(GroupFixtures::REFERENCE_GROUP);
 
-        $member = new Member(
+        /** @var Group $staff */
+        $staff = $this->getReference(GroupFixtures::REFERENCE_STAFF);
+        /** @var Group $customers */
+        $customers = $this->getReference(GroupFixtures::REFERENCE_CUSTOMERS);
+
+        $adminMember = new Member(
             new Id($savedAdmin->getId()->getValue()),
-            $savedGroup,
+            $staff,
             new Name(
                 $savedAdmin->getName()->getFirst(),
                 $savedAdmin->getName()->getLast()
             ),
             new Email('member.' . $savedAdmin->getEmail()->getValue())
         );
-        $this->members->add($member);
+        $manager->persist($adminMember);
+        $this->setReference(self::REFERENCE_ADMIN, $adminMember);
 
         $member = new Member(
             new Id($savedUser->getId()->getValue()),
-            $savedGroup,
+            $customers,
             new Name(
                 $savedUser->getName()->getFirst(),
                 $savedUser->getName()->getLast()
             ),
             new Email('member.' . $savedUser->getEmail()->getValue())
         );
-        $this->members->add($member);
+        $manager->persist($member);
 
-        $this->flusher->flush();
+        $manager->flush();
     }
 
     /**
