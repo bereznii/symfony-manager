@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\ReadModel\Work\Employees\Member;
 
 use App\Model\Work\Entity\Employees\Member\Member;
+use App\Model\Work\Entity\Employees\Member\Status;
 use App\ReadModel\Work\Employees\Member\Filter\Filter;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
@@ -101,10 +102,28 @@ class MemberFetcher
     public function exists(string $id)
     {
         return $this->connection->createQueryBuilder()
-                ->select('COUNT (id)')
-                ->from('work_members_members')
-                ->where('id = :id')
-                ->setParameter('id', $id)
-                ->executeQuery()->fetchOne() > 0;
+            ->select('COUNT (id)')
+            ->from('work_members_members')
+            ->where('id = :id')
+            ->setParameter('id', $id)
+            ->executeQuery()->fetchOne() > 0;
+    }
+
+    public function activeGroupedList(): array
+    {
+        $res = $this->connection->createQueryBuilder()
+            ->select([
+                'm.id',
+                'CONCAT(m.name_first, \' \', m.name_last) AS name',
+                'g.name AS group'
+            ])
+            ->from('work_members_members', 'm')
+            ->leftJoin('m', 'work_members_groups', 'g', 'g.id = m.group_id')
+            ->andWhere('m.status = :status')
+            ->setParameter('status', Status::ACTIVE)
+            ->orderBy('g.name')->addOrderBy('name')
+            ->executeQuery()->fetchAllAssociative();
+
+        return $res;
     }
 }

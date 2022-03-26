@@ -44,4 +44,13 @@ class Id
     {
         return $this->value;
     }
+
+    /**
+     * @param Id $another
+     * @return bool
+     */
+    public function isEqual(self $another): bool
+    {
+        return $this->getValue() === $another->getValue();
+    }
 }

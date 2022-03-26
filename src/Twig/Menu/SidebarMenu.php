@@ -27,9 +27,9 @@ class SidebarMenu
         $menu = $this->factory->createItem('root')
             ->setChildrenAttributes([
                 'class' => 'nav nav-pills nav-sidebar flex-column',
-                'data-widget' => 'treeview',
+//                'data-widget' => 'treeview',
                 'role' => 'menu',
-                'data-accordion' => 'false',
+                'data-accordion' => 'true',
             ]);
 
         $menu->addChild('', ['route' => 'home'])

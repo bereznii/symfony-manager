@@ -23,18 +23,18 @@ class DepartmentFetcher
      */
     public function listOfProject(string $project): array
     {
-        $stmt = $this->connection->createQueryBuilder()
+        $res = $this->connection->createQueryBuilder()
             ->select(
                 'id',
                 'name'
             )
             ->from('work_projects_project_departments')
             ->andWhere('project_id = :project')
-            ->setParameter(':project', $project)
+            ->setParameter('project', $project)
             ->orderBy('name')
-            ->execute();
+            ->executeQuery()->fetchAllAssociative();
 
-        return $stmt->fetchAll(\PDO::FETCH_KEY_PAIR);
+        return array_column($res, 'id', 'name');
     }
 
     /**

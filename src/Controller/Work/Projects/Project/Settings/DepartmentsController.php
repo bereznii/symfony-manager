@@ -32,7 +32,9 @@ class DepartmentsController extends AbstractController
 
     /**
      * @param Project $project
+     * @param DepartmentFetcher $departments
      * @return Response
+     * @throws \Doctrine\DBAL\Exception
      */
     #[Route(path: '', name: '')]
     public function index(Project $project, DepartmentFetcher $departments): Response

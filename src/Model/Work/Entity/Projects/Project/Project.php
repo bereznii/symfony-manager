@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Model\Work\Entity\Projects\Project;
 
 use App\Model\Work\Entity\Employees\Member\Member;
+use App\Model\Work\Entity\Employees\Member\Id as MemberId;
 use App\Model\Work\Entity\Projects\Project\Department\Department;
 use App\Model\Work\Entity\Projects\Project\Department\Id as DepartmentId;
 use App\Model\Work\Entity\Projects\Role\Role;

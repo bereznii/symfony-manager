@@ -20,6 +20,24 @@ class RoleFetcher
      * @return array
      * @throws \Doctrine\DBAL\Exception
      */
+    public function allList(): array
+    {
+        $res = $this->connection->createQueryBuilder()
+            ->select(
+                'id',
+                'name'
+            )
+            ->from('work_projects_roles')
+            ->orderBy('name')
+            ->executeQuery()->fetchAllAssociative();
+
+        return array_column($res, 'id', 'name');
+    }
+
+    /**
+     * @return array
+     * @throws \Doctrine\DBAL\Exception
+     */
     public function all(): array
     {
         $res = $this->connection->createQueryBuilder()
