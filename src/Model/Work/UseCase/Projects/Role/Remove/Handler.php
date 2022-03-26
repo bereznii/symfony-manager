@@ -27,6 +27,10 @@ class Handler
     {
         $role = $this->roles->get(new Id($command->id));
 
+        if ($this->projects->hasMembersWithRole($role->getId())) {
+            throw new \DomainException('Role contains members.');
+        }
+
         $this->roles->remove($role);
 
         $this->flusher->flush();
