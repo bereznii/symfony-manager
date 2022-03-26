@@ -9,6 +9,7 @@ use App\Model\Work\Entity\Projects\Project\Project;
 use App\Model\Work\UseCase\Projects\Project\Department\Create;
 use App\Model\Work\UseCase\Projects\Project\Department\Edit;
 use App\Model\Work\UseCase\Projects\Project\Department\Remove;
+use App\ReadModel\Work\Projects\Project\DepartmentFetcher;
 use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -34,11 +35,11 @@ class DepartmentsController extends AbstractController
      * @return Response
      */
     #[Route(path: '', name: '')]
-    public function index(Project $project): Response
+    public function index(Project $project, DepartmentFetcher $departments): Response
     {
         return $this->render('app/work/projects/project/settings/departments/index.html.twig', [
             'project' => $project,
-            'departments' => $project->getDepartments(),
+            'departments' => $departments->allOfProject($project->getId()->getValue()),
         ]);
     }
 
