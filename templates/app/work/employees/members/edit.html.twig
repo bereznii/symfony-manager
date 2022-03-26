@@ -1,0 +1,35 @@
+{% extends 'layout/base.html.twig' %}
+
+{% block title %}Edit Member{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ path('home') }}">Dashboard</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('work.employees.members') }}">Employees</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('work.employees.members.show', {'id': member.id}) }}">{{ member.name.full }}</a></li>
+        <li class="breadcrumb-item active">Edit</li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+
+    <div class="card">
+        <div class="card-body">
+
+            {{ form_start(form) }}
+            <div class="form-group">
+                {{ form_row(form.firstName, {'attr': {'placeholder': 'First Name', 'class': 'form-control'}}) }}
+            </div>
+            <div class="form-group">
+                {{ form_row(form.lastName, {'attr': {'placeholder': 'Last Name', 'class': 'form-control'}}) }}
+            </div>
+            <div class="form-group">
+                {{ form_row(form.email, {'attr': {'placeholder': 'Email', 'class': 'form-control'}}) }}
+            </div>
+            <button type="submit" class="btn btn-primary">Save</button>
+            {{ form_end(form) }}
+
+        </div>
+    </div>
+
+{% endblock %}

@@ -3,9 +3,9 @@
 namespace App\DataFixtures;
 
 use App\Model\Flusher;
-use App\Model\Work\Entity\Membership\Group\Group;
-use App\Model\Work\Entity\Membership\Group\GroupRepository;
-use App\Model\Work\Entity\Membership\Group\Id;
+use App\Model\Work\Entity\Employees\Group\Group;
+use App\Model\Work\Entity\Employees\Group\GroupRepository;
+use App\Model\Work\Entity\Employees\Group\Id;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 

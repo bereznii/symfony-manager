@@ -4,12 +4,12 @@ namespace App\DataFixtures;
 
 use App\Model\Flusher;
 use App\Model\User\Entity\User\User;
-use App\Model\Work\Entity\Membership\Group\Group;
-use App\Model\Work\Entity\Membership\Member\Email;
-use App\Model\Work\Entity\Membership\Member\Id;
-use App\Model\Work\Entity\Membership\Member\Member;
-use App\Model\Work\Entity\Membership\Member\MemberRepository;
-use App\Model\Work\Entity\Membership\Member\Name;
+use App\Model\Work\Entity\Employees\Group\Group;
+use App\Model\Work\Entity\Employees\Member\Email;
+use App\Model\Work\Entity\Employees\Member\Id;
+use App\Model\Work\Entity\Employees\Member\Member;
+use App\Model\Work\Entity\Employees\Member\MemberRepository;
+use App\Model\Work\Entity\Employees\Member\Name;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;

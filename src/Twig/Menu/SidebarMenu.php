@@ -53,15 +53,15 @@ class SidebarMenu
             ->setExtra('safe_label',true);
 
         if ($this->auth->isGranted('ROLE_WORK_MANAGE_MEMBERS')) {
-            $menu->addChild('Membership', ['route' => 'work.membership.members'])
+            $menu->addChild('Employees', ['route' => 'work.employees.members'])
                 ->setExtra('routes', [
-                    ['route' => 'work.membership.members'],
-                    ['pattern' => '/^work\.membership\..+/']
+                    ['route' => 'work.employees.members'],
+                    ['pattern' => '/^work\.employees\..+/']
                 ])
                 ->setExtra('icon', 'nav-icon fas fa-users')
                 ->setAttribute('class', 'nav-item')
                 ->setLinkAttribute('class', 'nav-link')
-                ->setLabel('<p>Membership</p>')
+                ->setLabel('<p>Employees</p>')
                 ->setExtra('safe_label',true);
         }
 

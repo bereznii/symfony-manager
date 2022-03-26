@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\DataFixtures;
 
 use App\Model\Flusher;
-use App\Model\Work\Entity\Membership\Member\MemberRepository;
+use App\Model\Work\Entity\Employees\Member\MemberRepository;
 use App\Model\Work\Entity\Projects\Role\Permission;
 use App\Model\Work\Entity\Projects\Role\Role;
 use App\Model\Work\Entity\Projects\Role\Id;

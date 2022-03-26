@@ -23,8 +23,8 @@ services:
             - '../src/Model/Work/Entity'
 
     App\Model\User\Entity\User\UserRepository: ~
-    App\Model\Work\Entity\Membership\Group\GroupRepository: ~
-    App\Model\Work\Entity\Membership\Member\MemberRepository: ~
+    App\Model\Work\Entity\Employees\Group\GroupRepository: ~
+    App\Model\Work\Entity\Employees\Member\MemberRepository: ~
     App\Model\Work\Entity\Projects\Project\ProjectRepository: ~
     App\Model\Work\Entity\Projects\Role\RoleRepository: ~
 

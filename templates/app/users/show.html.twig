@@ -41,9 +41,9 @@
                 {% endif %}
                 {% if is_granted('ROLE_WORK_MANAGE_MEMBERS') %}
                     {% if member %}
-                        <a href="{{ path('work.membership.members.show', {'id': member.id}) }}" class="btn btn-primary">View Member</a>
+                        <a href="{{ path('work.employees.members.show', {'id': member.id}) }}" class="btn btn-primary">View Member</a>
                     {% else %}
-                        <a href="{{ path('work.membership.members.create', {'id': user.id}) }}" class="btn btn-primary">Create Member</a>
+                        <a href="{{ path('work.employees.members.create', {'id': user.id}) }}" class="btn btn-primary">Create Member</a>
                     {% endif %}
                 {% endif %}
             </div>

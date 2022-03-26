@@ -1,0 +1,64 @@
+{% extends 'layout/base.html.twig' %}
+
+{% block title %}Groups{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ path('home') }}">Dashboard</a></li>
+        <li class="breadcrumb-item active">Groups</li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+    {{ include('app/work/employees/groups/_tabs.html.twig') }}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="form-group">
+                <a href="{{ path('work.employees.groups.create') }}" class="btn btn-success">Add Group</a>
+            </div>
+        </div>
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Members</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% set token = csrf_token('delete') %}
+                        {% for group in groups %}
+                            <tr>
+                                <td>
+                                    {% if group.members_count %}
+                                        <a href="{{ path('work.employees.members', {'form': {'group': group.id}}) }}">{{ group.name }}</a>
+                                    {% else %}
+                                        {{ group.name }}
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {{ group.members_count }}
+                                </td>
+                                <td>
+                                    <div class="d-flex flex-row">
+                                        <a href="{{ path('work.employees.groups.edit', {'id': group.id}) }}" class="btn btn-sm btn-primary mr-1">
+                                            <span class="fas fa-pencil-alt"></span>
+                                        </a>
+                                        <form action="{{ path('work.employees.groups.delete', {'id': group.id}) }}" method="post" onsubmit="return confirm('Are you sure?')">
+                                            <input type="hidden" name="token" value="{{ token }}" />
+                                            <button type="submit" class="btn btn-sm btn-danger"><span class="fa fa-trash"></span></button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
