@@ -28,6 +28,9 @@ manager-init: manager-composer-install manager-assets-install manager-wait-db ma
 manager-composer-install:
 	docker-compose run --rm php-cli composer install
 
+manager-composer-update:
+	docker-compose run --rm php-cli composer update
+
 manager-assets-install:
 	docker-compose run --rm node yarn install
 	docker-compose run --rm node npm rebuild node-sass
